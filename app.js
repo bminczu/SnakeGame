@@ -15,7 +15,21 @@ document.addEventListener('DOMContentLoaded', () => {
     let interval = 0
 
 
+///assigning key codes
 
+function control(e){
+    squares[currentIndex].classList.remove('snake')
+
+    if(e.keyCode ===39){
+        direction = 1
+    } else if (e.keyCode === 38) {
+        direction = -width
+    } else if (e.keyCode === 37) {
+        direction = -1
+    } else if (e.keyCode === 40) {
+        direction = +width
+    }
+}
 
 
 

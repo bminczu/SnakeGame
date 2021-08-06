@@ -15,31 +15,66 @@ document.addEventListener('DOMContentLoaded', () => {
     let interval = 0
 
 
-/// starting and restarting game - resetting everyting
+    
+    
+    
+    /// starting and restarting game - resetting everyting
+    function startGame() {
+        currentSnake.forEach(index => squares[index].classList.remove('snake'))
+        squares[appleIndex].classList.remove('apple')
+        clearInterval(interval)
+        score = 0
+        randomApple()
+        direction = 1
+        scoreDisplay.innerText = score
+        intervalTime = 1000
+        currentSnake = [2,1,0]
+        currentIndex = 0
+        currentSnake.forEach(index => squares[index].classList.add('snake'))
+        interval = setInterval(moveOutcomes, intervalTime)
+    }
+    
+    
+    ///fxn that deals with all move outcomes of the snake
+    function moveOutcomes(){
+        
+        if (
+            (currentSnake[0] + width >= (width * width) && direction === width ) || //if snake hits bottom
+            (currentSnake[0] % width === width -1 && direction === 1) || //if snake hits right wall
+            (currentSnake[0] % width === 0 && direction === -1) || //if snake hits left wall
+            (currentSnake[0] - width < 0 && direction === -width) ||  //if snake hits the top
+            squares[currentSnake[0] + direction].classList.contains('snake') //if snake goes into itself
+          ) {
+            return clearInterval(interval) //this will clear the interval if any of the above happen
+          }
+      
+          const tail = currentSnake.pop() //removes last ite of the array and shows it
+          squares[tail].classList.remove('snake')  //removes class of snake from the TAIL
+          currentSnake.unshift(currentSnake[0] + direction) //gives direction to the head of the array
+      
+          //deals with snake getting apple
+          if(squares[currentSnake[0]].classList.contains('apple')) {
+            squares[currentSnake[0]].classList.remove('apple')
+            squares[tail].classList.add('snake')
+            currentSnake.push(tail)
+            randomApple()
+            score++
+            scoreDisplay.textContent = score
+            clearInterval(interval)
+            intervalTime = intervalTime * speed
+            interval = setInterval(moveOutcomes, intervalTime)
+          }
+          squares[currentSnake[0]].classList.add('snake')
+        
 
-function startGame() {
-    currentSnake.forEach(index => squares[index].classList.remove('snake'))
-    squares[appleIndex].classList.remove('apple')
-    clearInterval(interval)
-    score = 0
-    //randomApple()
-    direction = 1
-    scoreDisplay = innerText.score
-    intervalTime = 1000
-    currentSnake = [2,1,0]
-    currentIndex = 0
-    currentSnake.forEach(index => squares[index].classList.add('snake'))
-    interval = setInterval(moveOutcomes, intervalTime)
-}
-
-
-
-
-
-
-///assigning key codes
-
-function control(e){
+    }
+    
+    
+    
+    
+    ///assigning key codes
+    
+    function control(e){
     squares[currentIndex].classList.remove('snake')
 
     if(e.keyCode ===39){
@@ -54,7 +89,7 @@ function control(e){
 }
 
 document.addEventListener('keyup', control)
-
+startBtn.addEventListener('click', startGame)
 
 
 
